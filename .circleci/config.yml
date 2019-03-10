@@ -43,4 +43,4 @@ jobs:
       - run:
           name: Run Linters
           command: |
-            cd $APPPATH && gometalinter --exclude=gotype --fast --vendor --deadline=60s . ./$(go list ./... | grep -v vendor | grep -v src)
+            cd $APPPATH && gometalinter --cyclo-over=20 --exclude=gotype --fast --vendor --deadline=60s . ./$(go list ./... | grep -v vendor | grep -v src)

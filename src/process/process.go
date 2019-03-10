@@ -10,13 +10,16 @@ import (
 )
 
 const (
-	DATAMUSE_API = "https://api.datamuse.com/words"
+	// DatamuseApiUrl datamuse word api url
+	DatamuseApiUrl = "https://api.datamuse.com/words"
 )
 
 var (
+	// FLAGS list of allowed flags
 	FLAGS = []string{"similar", "sound", "left", "right", "spell", "rhyme", "adj", "topic", "noun", "syn", "ant", "par", "hom", "cns"}
 )
 
+// FlagRequest struct
 type FlagRequest struct {
 	Similar        *string
 	Sound          *string
@@ -34,6 +37,7 @@ type FlagRequest struct {
 	ConsonantMatch *string
 }
 
+// Response struct
 type Response struct {
 	Word         string   `json:"word"`
 	Score        int      `json:"score"`
@@ -102,7 +106,7 @@ func buildQuery(flagReq FlagRequest, maxWords int) string {
 }
 
 func fetchResponse(query string) (*goreq.Response, error) {
-	url := DATAMUSE_API + "?" + query
+	url := DatamuseApiUrl + "?" + query
 	resp, err := goreq.Request{
 		Method:      "GET",
 		Uri:         url,
