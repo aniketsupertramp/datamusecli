@@ -43,14 +43,3 @@ jobs:
           name: Run Linters
           command: |
             cd $APPPATH && gometalinter --exclude=gotype --fast --vendor --deadline=60s . ./$(go list ./... | grep -v vendor | grep -v src)
-
-workflows:
-  build-deploy:
-    jobs:
-      - build
-      - deploy:
-          requires:
-            - build
-          filters:
-            branches:
-              only: master
