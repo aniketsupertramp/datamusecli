@@ -5,7 +5,7 @@ jobs:
       - image: circleci/golang:1.9
     working_directory: /go/src/datamusecli
     environment:
-              APPPATH: /go/src/datamusecli
+              APPPATH: /go/src/datamusecli/src
     steps:
       - restore_cache:
           keys:
@@ -21,6 +21,7 @@ jobs:
       - run:
           name: run build
           command: |
+            cd $APPPATH
             dep ensure
             go build -v
       - run:
