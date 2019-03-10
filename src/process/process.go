@@ -10,8 +10,8 @@ import (
 )
 
 const (
-	// DatamuseApiUrl datamuse word api url
-	DatamuseApiUrl = "https://api.datamuse.com/words"
+	// DatamuseAPIURL datamuse word api url
+	DatamuseAPIURL = "https://api.datamuse.com/words"
 )
 
 var (
@@ -106,7 +106,7 @@ func buildQuery(flagReq FlagRequest, maxWords int) string {
 }
 
 func fetchResponse(query string) (*goreq.Response, error) {
-	url := DatamuseApiUrl + "?" + query
+	url := DatamuseAPIURL + "?" + query
 	resp, err := goreq.Request{
 		Method:      "GET",
 		Uri:         url,
