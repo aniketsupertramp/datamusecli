@@ -1,0 +1,57 @@
+version: 1.0
+jobs:
+  build:
+    docker:
+      - image: circleci/golang:1.9
+    working_directory: /go/src/datamusecli
+    environment:
+              APPPATH: /go/src/datamusecli
+    steps:
+      - restore_cache:
+          keys:
+              - source-v1-{{ .Branch }}-{{ .Revision }}
+              - source-v1-{{ .Branch }}-
+              - source-v1-
+      - checkout
+      - save_cache:
+          key: source-v1-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - ".git"
+      - run: go get -u github.com/golang/dep/cmd/dep
+      - run:
+          name: run build
+          command: |
+            dep ensure
+            go build -v
+      - run:
+          name: run tests
+          command: |
+            go fmt ./...
+            go vet ./...
+            go test -v ./...
+      - run:
+          name: Install gometalinter
+          command: |
+             go get -u github.com/alecthomas/gometalinter
+             gometalinter --install
+      - run:
+          name: Setting GOPATH
+          command: |
+            echo 'export GOPATH=/go/src/datamusecli' >> $BASH_ENV
+            source $BASH_ENV
+      - run:
+          name: Run Linters
+          command: |
+            cd $APPPATH && gometalinter --exclude=gotype --fast --vendor --deadline=60s . ./$(go list ./... | grep -v vendor | grep -v src)
+
+workflows:
+  version: 1
+  build-deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
